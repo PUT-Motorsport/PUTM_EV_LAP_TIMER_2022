@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "LiquidCrystal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,7 +46,9 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t car_passed = 0;
+uint8_t car_passed = 1;
+uint8_t show_time = 0;
+uint8_t update_lcd = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +96,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  LiquidCrystal(GPIOC, RS_Pin, GPIO_PIN_6, ENABLE_Pin, DB4_Pin, DB5_Pin, DB6_Pin, DB7_Pin);
+  print("Starting...");
+  display();
   Reset();
   /* USER CODE END 2 */
 
@@ -104,17 +110,23 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  if(car_passed == 1)
-	  {
-		  HAL_TIM_Base_Start(&htim2);
-	  }
-	  else if(car_passed == 2)
-	  {
-		  Reset();
-	  }
-	  else
-	  {
-		  //wait for car to pass
-	  }
+	   	  {
+	   		  HAL_TIM_Base_Start_IT(&htim2);
+	   		  car_passed = 2;
+	   	  }
+	   	  else if(car_passed == 3)
+	   	  {
+	   		  Reset();
+	   		  car_passed = 1;
+	   	  }
+	   	  else//Update LCD
+	   	  {
+	   		  if(update_lcd == 1)
+	   		  {
+	   			  update();
+	   			  update_lcd = 0;
+	   		  }
+	   	  }
   }
   /* USER CODE END 3 */
 }
@@ -282,7 +294,7 @@ static void MX_GPIO_Init(void)
                           |ENABLE_Pin|RS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_Cluster_GPIO_Port, LED_Cluster_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_s_IR_GPIO_Port, LED_s_IR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LED_1_Pin LED_2_Pin LED_3_Pin LED_4_Pin
                            DB4_Pin DB5_Pin DB6_Pin DB7_Pin
@@ -301,12 +313,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(IR_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED_Cluster_Pin */
-  GPIO_InitStruct.Pin = LED_Cluster_Pin;
+  /*Configure GPIO pin : LED_s_IR_Pin */
+  GPIO_InitStruct.Pin = LED_s_IR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_Cluster_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_s_IR_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB6__Pin */
   GPIO_InitStruct.Pin = PB6__Pin;

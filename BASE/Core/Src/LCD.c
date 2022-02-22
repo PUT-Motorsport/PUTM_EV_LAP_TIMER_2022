@@ -29,9 +29,13 @@ void Show_Time(struct time *t1cpy)
 }
 void Update_Time(struct time *t1)
 {
-
-
-
-
-
+	clear();
+	char buffer_msg[21];
+	/*
+	itoa(t1->minute,      bufferM,  10);
+	itoa(t1->seconds,     bufferS,  10);
+	itoa(t1->miliseconds, bufferMs, 10);
+	*/
+	sprintf(buffer_msg, "%d:%d1:%d2" ,t1->minute, t1->seconds, t1->miliseconds);
+	print(buffer_msg);
 }

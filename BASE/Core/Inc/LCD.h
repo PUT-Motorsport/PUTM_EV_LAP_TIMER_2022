@@ -10,8 +10,15 @@
 
 #include "Timer.h"
 #include "main.h"
+#include "LiquidCrystal.h"
+#include "stdio.h"
 
 void Show_Time(struct time *t1);
 void Update_Time(struct time *t1);
+void Print(struct time *t1);
+
+char  bufferM;
+char  bufferS[2];
+char bufferMs[3];
 
 #endif /* INC_LCD_H_ */

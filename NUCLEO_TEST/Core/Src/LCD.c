@@ -32,18 +32,15 @@ void Show_Time(struct time *t1cpy)
 }
 void Update_Time(struct time *t1)
 {
-	char bufferM[1];
-	itoa(t1->minute, bufferM,10);
-	HAL_UART_Transmit (&hlpuart1, bufferM, sizeof (bufferM), 100);
-	char bufferZ[1] = ":";
-	HAL_UART_Transmit (&hlpuart1, bufferZ, sizeof (bufferZ), 100);
-	char bufferS[2];
-	itoa(t1->seconds, bufferS,10);
-	HAL_UART_Transmit (&hlpuart1, bufferS, sizeof (bufferS), 100);
-	HAL_UART_Transmit (&hlpuart1, bufferZ, sizeof (bufferZ), 100);
-	char bufferMs[3];
-	itoa(t1->miliseconds, bufferMs,10);
-	HAL_UART_Transmit (&hlpuart1, bufferMs, sizeof (bufferMs), 100);
-	char newline[2] = "\r\n";
-	HAL_UART_Transmit (&hlpuart1, (uint8_t *) newline, 2, 10);
+	Print(t1);
+}
+void Print(struct time *t1)
+{
+	char buffer_msg[8];
+	itoa(t1->minute,      bufferM,  10);
+	itoa(t1->seconds,     bufferS,  10);
+	itoa(t1->miliseconds, bufferMs, 10);
+	sprintf(buffer_msg, bufferM,":", bufferS,":",bufferMs);
+	print(buffer_msg);
+	display();
 }

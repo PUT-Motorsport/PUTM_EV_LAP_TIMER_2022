@@ -69,8 +69,8 @@ void Error_Handler(void);
 #define IR_Pin GPIO_PIN_0
 #define IR_GPIO_Port GPIOB
 #define IR_EXTI_IRQn EXTI0_IRQn
-#define LED_Cluster_Pin GPIO_PIN_1
-#define LED_Cluster_GPIO_Port GPIOB
+#define LED_s_IR_Pin GPIO_PIN_1
+#define LED_s_IR_GPIO_Port GPIOB
 #define DB4_Pin GPIO_PIN_7
 #define DB4_GPIO_Port GPIOC
 #define DB5_Pin GPIO_PIN_8

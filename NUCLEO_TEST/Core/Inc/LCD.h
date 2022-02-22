@@ -14,4 +14,9 @@
 void Show_Time(struct time *t1);
 void Update_Time(struct time *t1);
 
+
+char  bufferM[3];
+char  bufferS[3];
+char  bufferMs[3];
+
 #endif /* INC_LCD_H_ */

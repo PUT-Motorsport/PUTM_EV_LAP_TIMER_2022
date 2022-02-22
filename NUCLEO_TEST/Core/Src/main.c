@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "LiquidCrystal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -92,8 +93,13 @@ int main(void)
   MX_LPUART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
-  HAL_Delay(1000);
+  LiquidCrystal(GPIOC, RS_Pin, GPIO_PIN_6, ENABLE_Pin, DB4_Pin, DB5_Pin, DB6_Pin, DB7_Pin);
+   print("Starting...");
+   noDisplay();
+   HAL_Delay(500);
+  // Turn on the display:
+   display();
+   HAL_Delay(1000);
   Reset();
   /* USER CODE END 2 */
 
