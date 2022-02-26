@@ -24,5 +24,6 @@ struct time
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim);
 void Reset(void);
 void update(void);
+void Init(void);
 
 #endif /* INC_TIMER_H_ */

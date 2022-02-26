@@ -207,13 +207,14 @@ void SysTick_Handler(void)
 void EXTI0_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_IRQn 0 */
+	HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 0);
 	if(car_passed == 0)
 	{
 		car_passed = 1;
 	}
-	else if(car_passed == 2)
+	else if(car_passed == 3)
 	{
-		car_passed = 3;
+		car_passed = 4;
 	}
 
   /* USER CODE END EXTI0_IRQn 0 */

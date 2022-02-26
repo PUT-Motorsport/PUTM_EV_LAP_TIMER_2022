@@ -45,6 +45,14 @@ TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
 uint8_t car_passed = 1;
+
+//car_passed variable states
+//car_passed = 0 - Lap timer has been turned ON and it's waiting for first pass
+//car_passed = 1 - First pass occured, start timing first lap.
+//car_passed = 2 - Lap is being timed, changes to car_passed = 3 after one second of delay in order not to get false positive sensor readings.
+//car_passed = 3 - Lap is being timed.
+//car_passed = 4 - Car has completed a lap, reset timer, show time and go back to car_passed = 1
+
 uint8_t show_time  = 0;
 uint8_t update_lcd = 0;
 /* USER CODE END PV */
@@ -95,6 +103,18 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
+  //LED_1 - ON: Timer is running OFF: it's not
+  //LED_2 - Flash if IR detected.
+  //LED_3 -
+  //LED_4 -
+
+  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
+
+  //TIM3->CCR1 = 50;
+  //HAL_TIM_Base_Start(&htim3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 
   LiquidCrystal(GPIOC, RS_Pin, GPIO_PIN_6, E_Pin, DB4_Pin, DB5_Pin, DB6_Pin, DB7_Pin);
@@ -111,10 +131,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(car_passed == 1)
 	   	  {
-	   		  HAL_TIM_Base_Start_IT(&htim2);
-	   		  car_passed = 2;
+	   		HAL_TIM_Base_Start_IT(&htim2);
+	   		HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 0);
+	   		car_passed = 2;
 	   	  }
-	   	  else if(car_passed == 3)
+	   	  else if(car_passed == 4)
 	   	  {
 	   		  Reset();
 	   		  car_passed = 1;
@@ -200,7 +221,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 1000;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 32;
+  htim2.Init.Period = 31;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)

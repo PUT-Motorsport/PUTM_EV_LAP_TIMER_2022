@@ -8,6 +8,7 @@
 
 extern uint8_t show_time;
 extern uint8_t update_lcd;
+extern uint8_t car_passed;
 
 struct time timer1;
 struct time Best;
@@ -19,6 +20,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		{
 			timer1.seconds++;
 			timer1.miliseconds = 0;
+			HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
+			car_passed = 3;
 		}
 	if(timer1.seconds == 60)
 		{
