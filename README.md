@@ -10,5 +10,5 @@ _car_passed = 2_ - During IR sensor block.
 _car_passed = 3_ - Waiting for car to finish.  
 _car_passed = 4_ - Second detecion.  
 ![Lap_timer_base_states](https://user-images.githubusercontent.com/94369639/156034816-96426a1a-2e8b-44eb-8eba-774fa294abea.png)
-## Block Diagram
+## Code Block Diagram
 ![Lap_Timer_Block_Diagram drawio](https://user-images.githubusercontent.com/94369639/156026390-378947ad-38d6-482e-b2fa-1bb3afe6d8b1.png)
