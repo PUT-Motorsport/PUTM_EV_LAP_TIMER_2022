@@ -3,7 +3,7 @@
   Firmware for Laptimer device used on PM-08 racing car developed by PUT Motorsport. 
 Written in C/C++ for STM32L4P5RET6 microprocessor, created in STM32CubeIDE 1.8.0
 ## State Diagram For Base
-In-code variable _car_passed_ determine wich state, a microcontroller is currently in.
+In-code variable _car_passed_ determine wich state, a microcontroller is currently in. \n
 _car_passed = 0_ - Power-up, before first pass.
 _car_passed = 1_ - After first detecion.
 _car_passed = 2_ - During IR sensor block.
