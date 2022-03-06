@@ -12,15 +12,15 @@ void Show_Time(struct time *t1cpy, struct time *Best)
 {
 	update_state = 0;
 	uint32_t blink_time;
-	uint32_t whole_time = HAL_GetTick() + 2400;
+	uint32_t whole_time = HAL_GetTick() + 2500;
 	while(HAL_GetTick() < whole_time)
 	{
-		blink_time = HAL_GetTick() + 300;
+		blink_time = HAL_GetTick() + 500;
 		while(HAL_GetTick() < blink_time)
 		{
 			Update_Time(t1cpy);
 		}
-		blink_time = HAL_GetTick() + 300;
+		blink_time = HAL_GetTick() + 250;
 		while(HAL_GetTick() < blink_time)
 		{
 			Clear_first_row();

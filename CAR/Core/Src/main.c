@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "send_start_stop_frame.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -43,6 +42,7 @@
 /* Private variables ---------------------------------------------------------*/
 CAN_HandleTypeDef hcan1;
 
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
@@ -54,6 +54,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -93,17 +94,27 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_TIM3_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+  //Turn Off Leds
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 1);
   HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
   HAL_GPIO_WritePin(GPIOC, LED_3_Pin, 1);
   HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_5_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_6_Pin, 1);
 
-  Can_Init();
+  //LEDs assignment
+  //LED_1_Pin - Device is working.
+  //LED_2_Pin - Pass detected
+  //LED_3_Pin - Error handler
+  //LED_4_Pin - Not used
+  //LED_5_Pin and LED_6_Pin - Waiting for pass
 
+  //Start IR Leds
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-
+  //Device is working.
+  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,6 +124,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	  //Blink Leds to indicate waiting state.
+	  HAL_GPIO_WritePin(GPIOC, LED_6_Pin, 1);
+	  HAL_GPIO_WritePin(GPIOC, LED_5_Pin, 0);
+	  HAL_Delay(250);
+	  HAL_GPIO_WritePin(GPIOC, LED_6_Pin, 0);
+	  HAL_GPIO_WritePin(GPIOC, LED_5_Pin, 1);
+	  HAL_Delay(250);
   }
   /* USER CODE END 3 */
 }
@@ -181,11 +200,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 16;
-  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.Prescaler = 4;
+  hcan1.Init.Mode = CAN_MODE_LOOPBACK;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_3TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_13TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
@@ -197,8 +216,53 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-
+  HAL_CAN_Start(&hcan1);
   /* USER CODE END CAN1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 1000;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 32000*2;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
@@ -247,7 +311,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 80;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
@@ -316,7 +380,10 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-	  HAL_GPIO_TogglePin(GPIOC, LED_3_Pin);
+	  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 1);
+	  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
+	  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, 0);
+	  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
 	  HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */

@@ -12,7 +12,12 @@ extern uint8_t car_passed;
 
 struct time timer1;
 struct time Best;
-
+/**
+* @brief Timer callback
+* This function keeps track of lap time.
+* @param: Pointer to timer handler
+* @retval none
+*/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
 	timer1.miliseconds++;
@@ -38,7 +43,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		}
 		update_lcd = 1;
 }
-
+/**
+* @brief Reset
+* This function Reset timer, calculate best time and induces function that display time on LCD.
+* @param: none
+* @retval none
+*/
 void Reset(void)
 {
 	struct time timer_cpy;
@@ -66,10 +76,22 @@ void Reset(void)
 	Show_Time(&timer_cpy, &Best);
 	update_state = 1;
 }
+/**
+* @brief Update LCD
+* This function updates lcd
+* @param: none
+* @retval none
+*/
 void update()
 {
 	Update_Time(&timer1);
 }
+/**
+* @brief Init
+* This function updates lcd
+* @param: none
+* @retval none
+*/
 void Init()
 {
 	Best.miliseconds = 999;
