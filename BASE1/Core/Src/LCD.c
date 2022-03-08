@@ -6,8 +6,14 @@
  */
 
 #include "LCD.h"
+#include "stdio.h"
 
-
+/**
+* @brief Display lap time.
+* This function displays lap time after the car crosses a start-finish line.
+* @param: Pointer to structure containing last lap time and best time.
+* @retval none
+*/
 void Show_Time(struct time *t1cpy, struct time *Best)
 {
 	update_state = 0;
@@ -28,12 +34,25 @@ void Show_Time(struct time *t1cpy, struct time *Best)
 	}
 	Show_Best(Best);
 }
+/**
+* @brief Clear first row.
+* This function clears first row on LCD screen in order tu update current lap time.
+* It takes less time to print "       " than to use lcd.clear() function.
+* @param: none.
+* @retval none
+*/
 void Clear_first_row()
 {
 	setCursor(0,0);
 	print("               ");
 
 }
+/**
+* @brief Update.
+* This function updates lcd.
+* @param: Pointer to current running time.
+* @retval none
+*/
 void Update_Time(struct time *t1)
 {
 	setCursor(0,0);
@@ -47,6 +66,12 @@ void Update_Time(struct time *t1)
 	print(bufferMs);
 	print(" ");
 }
+/**
+* @brief Display best.
+* This function displays best time, if one was set.
+* @param: Pointer to structure holding best time.
+* @retval none
+*/
 void Show_Best(struct time *t1)
 {
 	setCursor(0,1);

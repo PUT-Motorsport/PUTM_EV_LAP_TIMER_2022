@@ -19,6 +19,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "LiquidCrystal.h"
+#include "Timer.h"
+#include "LCD.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -105,7 +108,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   //LED_1 - ON: Timer is running OFF: it's not
-  //LED_2 - Flash if IR detected.
+  //LED_2 - IR detected.
   //LED_3 -
   //LED_4 -
 

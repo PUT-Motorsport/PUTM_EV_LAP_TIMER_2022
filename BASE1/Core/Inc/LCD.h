@@ -13,6 +13,8 @@
 #include "LiquidCrystal.h"
 #include "stdio.h"
 
+struct time t1cpy;
+
 void Show_Time(struct time *t1cpy, struct time *Best);
 void Clear_first_row();
 void Update_Time(struct time *t1);

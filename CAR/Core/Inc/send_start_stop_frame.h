@@ -10,6 +10,7 @@
 
 #include "main.h"
 
+void HAL_TIM_PeriodElapsedCallback1(TIM_HandleTypeDef* htim2);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 

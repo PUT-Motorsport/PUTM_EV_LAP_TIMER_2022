@@ -88,7 +88,7 @@ void update()
 }
 /**
 * @brief Init
-* This function updates lcd
+* This function initialize best time
 * @param: none
 * @retval none
 */

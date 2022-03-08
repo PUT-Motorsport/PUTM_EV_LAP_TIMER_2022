@@ -32,12 +32,12 @@ const static CAN_TxHeaderTypeDef Tx1()
 * @param: Pointer to timer handler
 * @retval Bool. True if its data, false if its a toggle frame.
 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+void HAL_TIM_PeriodElapsedCallback1(TIM_HandleTypeDef* htim2)
 {
 	SendFrameFlag = 1;
 	HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
-	__HAL_TIM_SET_COUNTER(htim, 0);
-	__HAL_TIM_CLEAR_IT(htim ,TIM_IT_UPDATE);
+	__HAL_TIM_SET_COUNTER(htim2, 0);
+	__HAL_TIM_CLEAR_IT(htim2 ,TIM_IT_UPDATE);
 	HAL_TIM_Base_Stop_IT(&htim2);
 }
 /**
