@@ -13,15 +13,17 @@
 #include "LiquidCrystal.h"
 #include "stdio.h"
 
-struct time t1cpy;
+//struct time t1cpy;
 
 void Show_Time(struct time *t1cpy, struct time *Best);
 void Clear_first_row();
 void Update_Time(struct time *t1);
 void Show_Best(struct time *t1);
 
+/*
 char  bufferM[3];
 char  bufferS[2];
 char  bufferMs[3];
+*/
 
 #endif /* INC_LCD_H_ */

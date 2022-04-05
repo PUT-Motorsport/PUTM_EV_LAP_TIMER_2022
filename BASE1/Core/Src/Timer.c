@@ -10,6 +10,8 @@ extern uint8_t show_time;
 extern uint8_t update_lcd;
 extern uint8_t car_passed;
 
+uint8_t update_state;
+
 struct time timer1;
 struct time Best;
 /**

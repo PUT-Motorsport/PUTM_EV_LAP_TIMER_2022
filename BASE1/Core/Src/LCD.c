@@ -8,6 +8,14 @@
 #include "LCD.h"
 #include "stdio.h"
 
+struct time t1cpy;
+
+extern uint8_t update_state;
+
+char  bufferM[3];
+char  bufferS[2];
+char  bufferMs[3];
+
 /**
 * @brief Display lap time.
 * This function displays lap time after the car crosses a start-finish line.

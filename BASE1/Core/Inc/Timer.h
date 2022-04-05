@@ -11,7 +11,7 @@
 #include "main.h"
 #include "LCD.h"
 
-uint8_t update_state;
+//uint8_t update_state;
 
 struct time
 {
