@@ -40,28 +40,3 @@ void HAL_TIM_PeriodElapsedCallback1(TIM_HandleTypeDef* htim2)
 	__HAL_TIM_CLEAR_IT(htim2 ,TIM_IT_UPDATE);
 	HAL_TIM_Base_Stop_IT(&htim2);
 }
-/**
-* @brief IR receiver callback
-* This function sends CAN frame whenever a pass is detected
-* @param: none
-* @retval none
-*/
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(GPIO_Pin);
-  if(SendFrameFlag == 1)
-  {
-	  if((HAL_CAN_AddTxMessage(&hcan1, &Tx1, &pData, &TxMailbox)) == HAL_OK)
-	  {
-		 while (HAL_CAN_IsTxMessagePending(&hcan1, TxMailbox));
-	  	 HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 0);
-	  }
-	  else
-	  {
-	  	 Error_Handler();
-	  }
-  }
-  SendFrameFlag = 0;
-  HAL_TIM_Base_Start_IT(&htim2);
-}

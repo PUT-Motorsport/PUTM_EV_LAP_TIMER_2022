@@ -10,7 +10,7 @@ void leading_pulse(void);
 void Send_Code()
 {
 	leading_pulse();
-	Send_One();
+	Send_Zero();
 	Send_One();
 	end();
 }
@@ -38,9 +38,9 @@ void end()
 void leading_pulse()//H2ms, L1ms
 {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	HAL_Delay(2);
+	delay_us(2000);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
-	HAL_Delay(1);
+	delay_us(1000);
 }
 void delay_us(uint16_t us)
 {
