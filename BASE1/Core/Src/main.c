@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+//#include "IR_Code.c"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +50,7 @@ uint16_t battery_charge;
 
 //car_passed variable states
 //car_passed = 0 - Lap timer has been turned ON and it's waiting for first pass
-//car_passed = 1 - First pass occured, start timing first lap.
+//car_passed = 1 - First pass occurred, start timing first lap.
 //car_passed = 2 - Lap is being timed, changes to car_passed = 3 after one second of delay in order not to get false positive sensor readings.
 //car_passed = 3 - Lap is being timed.
 //car_passed = 4 - Car has completed a lap, reset timer, show time and go back to car_passed = 1
@@ -119,7 +119,6 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
   //Turn on IR leds.
   HAL_TIM_Base_Start(&htim1);
-  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   //Initialize LCD.
   LiquidCrystal(GPIOC, RS_Pin, GPIO_PIN_6, E_Pin, DB4_Pin, DB5_Pin, DB6_Pin, DB7_Pin);
   Reset();
@@ -152,8 +151,15 @@ int main(void)
 	   			  update_lcd = 0;
 	   		  }
 	   	  }
-	Send_Code();
-	HAL_Delay(2000);
+
+	  //700
+	  //900
+	  //1100
+	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+	  delay_us(700);
+	  HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+	  delay_us(700);
+
   }
   /* USER CODE END 3 */
 }

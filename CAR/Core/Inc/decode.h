@@ -8,25 +8,26 @@
 #ifndef INC_DECODE_H_
 #define INC_DECODE_H_
 
-#include "stm32l4xx_hal.h"
+#include "main.h"
 
 typedef enum{
-	PULSE_OK,
-	PULSE_NOT_OK
-}CODE_LEADING_PULSE;
+	CODE_OK,
+	CODE_NOT_OK
+}Valid_Code;
+
+typedef enum{
+	SECTOR_1,
+	SECTOR_2,
+	SECTOR_3,
+	DEFAULT
+}Sector;
+
 
 typedef struct {
 
-	uint32_t risingedge[4];
-	uint32_t fallingedge[4];
-
-	CODE_LEADING_PULSE leading_pulse;
-
-	uint8_t value[2];
-
-	uint8_t sector;
-
-	TIM_HandleTypeDef* htim;
+	uint32_t risingedge[2];
+	Valid_Code code;
+	Sector sector;
 
 }Code;
 

@@ -27,20 +27,20 @@ void Send_One()
 	delay_us(562.5);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
 	delay_us(1687.5);
-
 }
 void end()
 {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	delay_us(2000);
+	delay_us(1000);
 	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+	delay_us(500);
 }
 void leading_pulse()//H2ms, L1ms
 {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	delay_us(2000);
-	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
 	delay_us(1000);
+	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+	delay_us(500);
 }
 void delay_us(uint16_t us)
 {

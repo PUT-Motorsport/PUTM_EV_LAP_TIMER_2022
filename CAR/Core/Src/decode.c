@@ -8,40 +8,38 @@
 #include "decode.h"
 
 extern Code c1;
+uint32_t diff;
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim3)
 {
-	uint32_t leading_diff = ((c1.risingedge[0] - c1.fallingedge[0])/1000);
-	if(leading_diff == 2)
-	{
-		c1.leading_pulse == PULSE_OK;
-		for(int i = 0;i<2;i++)
-		{
-			float NEC_impulse = (((float)(c1.risingedge[1+i])  - ((float)c1.fallingedge[1+i]))/1000);
-			float NEC_pause =   (((float)(c1.fallingedge[2+i]) - ((float)c1.risingedge[1+i]))/1000);
-			if((NEC_impulse > 0.4) && (NEC_impulse < 0.8))
-			{
-				if((NEC_pause > 1.2) && (NEC_impulse < 1.8))
-				{
-					c1.value[i] = 1;
-				}
-				else if((NEC_pause > 0.4) && (NEC_impulse < 0.8))
-				{
-					c1.value[i] = 0;
-				}
-			}
-			else
-			{
+	diff = (c1.risingedge[1] - c1.risingedge[0]);
 
-			}
-		}
-		c1.sector = c1.value[0] || c1.value[1];
+	if( (diff > 2100) && (diff < 2300))
+	{
+		c1.sector = SECTOR_1;
+		c1.code = CODE_OK;
+		HAL_TIM_IC_Stop_DMA(htim3, TIM_CHANNEL_3);
+
+	}
+	else if((diff > 1700) && (diff < 1900))
+	{
+		c1.sector = SECTOR_2;
+		c1.code = CODE_OK;
+		HAL_TIM_IC_Stop_DMA(htim3, TIM_CHANNEL_3);
+	}
+	else if((diff > 1300) && (diff < 1500))
+	{
+		c1.sector = SECTOR_3;
+		c1.code = CODE_OK;
+		HAL_TIM_IC_Stop_DMA(htim3, TIM_CHANNEL_3);
+	}
+	else
+	{
+		c1.sector = DEFAULT;
+		c1.code = CODE_NOT_OK;
 	}
 }
-/*
-void delay_us(uint16_t us)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim2)
 {
-	__HAL_TIM_SET_COUNTER(&htim1,0);  // set the counter value a 0
-	while (__HAL_TIM_GET_COUNTER(&htim1) < us);  // wait for the counter to reach the us input in the parameter
+	HAL_GPIO_TogglePin(GPIOC, LED_6_Pin);
 }
-*/
