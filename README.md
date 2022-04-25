@@ -14,3 +14,4 @@ _car_passed = 4_ - Second detection.
 ![Lap_Timer_Block_Diagram drawio](https://user-images.githubusercontent.com/94369639/156026390-378947ad-38d6-482e-b2fa-1bb3afe6d8b1.png)
 ## Carrier detect mechanism
   On-track devices sends a square wave with fixed period, uniqe for each of them:
+![Carriers](https://user-images.githubusercontent.com/94369639/165090463-c8c5cc38-499e-4e8b-b6ae-789264bc9d0d.png)
