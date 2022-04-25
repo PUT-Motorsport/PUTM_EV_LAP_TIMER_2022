@@ -11,7 +11,9 @@
 #include "main.h"
 #include "decode.h"
 
-
+void Sector_1();
+void Sector_2();
+void Sector_3();
 
 
 
