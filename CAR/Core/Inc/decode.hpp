@@ -5,8 +5,8 @@
  *      Author: Adam
  */
 
-#ifndef INC_DECODE_H_
-#define INC_DECODE_H_
+#ifndef INC_DECODE_HPP_
+#define INC_DECODE_HPP_
 
 #include "main.h"
 
@@ -34,4 +34,4 @@ typedef struct {
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim);
 
 
-#endif /* INC_DECODE_H_ */
+#endif /* INC_DECODE_HPP_ */

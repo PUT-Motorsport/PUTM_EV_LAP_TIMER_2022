@@ -18,14 +18,15 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
+#include "main.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "decode.h"
-#include "Sector.h"
+#include "decode.hpp"
+#include "Sector.hpp"
 #include <stdio.h>
 #include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,7 +53,6 @@ DMA_HandleTypeDef hdma_tim3_ch3;
 /* USER CODE BEGIN PV */
 
 Code c1;
-CAN_TxHeaderTypeDef Tx1;
 
 /* USER CODE END PV */
 
@@ -142,11 +142,9 @@ int main(void)
   //Start IR detecting
   HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
   //Device is working.
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 0);
+  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
   //Start blinking timer
   HAL_TIM_Base_Start_IT(&htim2);
-
-
 
   c1.code = CODE_NOT_OK;
   c1.sector = DEFAULT;
@@ -242,7 +240,6 @@ void SystemClock_Config(void)
   */
 static void MX_CAN1_Init(void)
 {
-
   /* USER CODE BEGIN CAN1_Init 0 */
 
   /* USER CODE END CAN1_Init 0 */
@@ -267,13 +264,6 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-
-  Tx1.DLC = 1;
-  Tx1.ExtId = 0;
-  Tx1.IDE = 0;
-  Tx1.RTR = 0;
-  Tx1.StdId = 0x0A;
-  Tx1.TransmitGlobalTime = DISABLE;
 
   HAL_CAN_Start(&hcan1);
   /* USER CODE END CAN1_Init 2 */
@@ -445,10 +435,10 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 1);
-	  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
-	  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
+	  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_RESET);
+	  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, GPIO_PIN_SET);
 	  HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */

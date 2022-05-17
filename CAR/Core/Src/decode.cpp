@@ -5,7 +5,7 @@
  *      Author: Adam
  */
 
-#include "decode.h"
+#include "decode.hpp"
 
 extern Code c1;
 uint32_t diff;
