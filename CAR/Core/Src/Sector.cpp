@@ -2,7 +2,7 @@
  * Sector.c
  *
  *  Created on: 25 Apr 2022
- *      Author: wasyl
+ *      Author: Adam Wasilewski
  */
 
 #include "Sector.hpp"

@@ -2,7 +2,7 @@
  * decode.h
  *
  *  Created on: 6 Apr 2022
- *      Author: Adam
+ *      Author: Adam Wasilewski
  */
 
 #ifndef INC_DECODE_HPP_

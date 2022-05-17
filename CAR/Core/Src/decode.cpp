@@ -2,7 +2,7 @@
  * decode.c
  *
  *  Created on: 6 Apr 2022
- *      Author: Adam
+ *      Author: Adam Wasilewski
  */
 
 #include "decode.hpp"
