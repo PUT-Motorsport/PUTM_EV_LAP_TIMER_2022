@@ -18,18 +18,24 @@ Lap_timer_Pass pass{
 
 void Sector_1()
 {
-	HAL_GPIO_WritePin(GPIOC, LED_5_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_5_GPIO_Port, LED_5_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_2_GPIO_Port, LED_2_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(LED_3_GPIO_Port, LED_3_Pin, GPIO_PIN_RESET);
 	pass.Sector = 0x01;
-	//auto Lap_timer_frame = PUTM_CAN::Can_tx_message(pass, can_tx_header_LAP_TIMER_PASS);
-	/*
+
+	Lap_timer_Pass pass_s1{
+		.Sector = 1,
+		.device_state = Lap_timer_states::Power_up
+	};
+
+	auto Lap_timer_frame = PUTM_CAN::Can_tx_message(pass_s1, can_tx_header_LAP_TIMER_PASS);
+
 	auto status = Lap_timer_frame.send(hcan1);
 	if(status != HAL_StatusTypeDef::HAL_OK)
 	{
 		Error_Handler();
 	}
-	*/
+
 	HAL_Delay(200);
 	HAL_GPIO_WritePin(GPIOC, LED_5_Pin, GPIO_PIN_SET);
 }

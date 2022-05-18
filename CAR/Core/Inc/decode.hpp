@@ -10,26 +10,21 @@
 
 #include "main.h"
 
-typedef enum{
-	CODE_OK,
-	CODE_NOT_OK
-}Valid_Code;
 
-typedef enum{
+
+enum struct Sector{
 	SECTOR_1,
 	SECTOR_2,
 	SECTOR_3,
 	DEFAULT
-}Sector;
+};
 
 
-typedef struct {
-
+struct Code{
 	uint32_t risingedge[2];
-	Valid_Code code;
+	bool valid_code;
 	Sector sector;
-
-}Code;
+};
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim);
 
