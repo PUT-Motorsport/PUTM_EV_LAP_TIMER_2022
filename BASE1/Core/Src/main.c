@@ -116,7 +116,7 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 1);
   HAL_GPIO_WritePin(GPIOC, LED_2_Pin, 1);
   HAL_GPIO_WritePin(GPIOC, LED_3_Pin, 1);
-  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 1);
+  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 0);
   //Turn on IR leds.
   HAL_TIM_Base_Start(&htim1);
   //Initialize LCD.
@@ -159,6 +159,7 @@ int main(void)
 	  delay_us(700);
 	  HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
 	  delay_us(700);
+	  HAL_GPIO_TogglePin(GPIOC, LED_3_Pin);
 
   }
   /* USER CODE END 3 */
