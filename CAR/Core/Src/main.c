@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -22,10 +21,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "decode.hpp"
-#include "Sector.hpp"
-#include <stdio.h>
-#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -51,8 +46,6 @@ TIM_HandleTypeDef htim3;
 DMA_HandleTypeDef hdma_tim3_ch3;
 
 /* USER CODE BEGIN PV */
-
-Code c1;
 
 /* USER CODE END PV */
 
@@ -106,48 +99,6 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_5_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_6_Pin, GPIO_PIN_RESET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_6_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_5_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_SET);
-  HAL_Delay(200);
-
-  //LEDs assignment
-  //LED_1_Pin - Device is working.
-  //LED_2_Pin - MSb of sector code
-  //LED_3_Pin - LSb of sector code
-  //LED_4_Pin - Error handler
-  //LED_5_Pin - Blink if pass detected
-  //LED_6_Pin - Blinking = Waiting for pass
-
-  //Start IR detecting
-  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
-  //Device is working.
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
-  //Start blinking timer
-  HAL_TIM_Base_Start_IT(&htim2);
-
-  c1.code = CODE_NOT_OK;
-  c1.sector = DEFAULT;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,29 +108,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(c1.code == CODE_OK)
-	  {
-		  	  if(c1.sector == SECTOR_1)
-		  	  {
-		  		  Sector_1();
-		  	  }
-		  	  else if(c1.sector == SECTOR_2)
-		  	  {
-		  		  Sector_2();
-		  	  }
-		  	  else if(c1.sector == SECTOR_3)
-		  	  {
-		  		  Sector_3();
-		  	  }
-		  	  c1.sector = DEFAULT;
-		  	  c1.code = CODE_NOT_OK;
-		  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
-	  }
-	  else if(c1.sector == DEFAULT)
-	  {
-
-	  }
-
   }
   /* USER CODE END 3 */
 }
@@ -267,7 +195,6 @@ static void MX_CAN1_Init(void)
   }
   /* USER CODE BEGIN CAN1_Init 2 */
 
-  HAL_CAN_Start(&hcan1);
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -436,11 +363,6 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOC, LED_4_Pin, GPIO_PIN_SET);
-	  HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */
 }

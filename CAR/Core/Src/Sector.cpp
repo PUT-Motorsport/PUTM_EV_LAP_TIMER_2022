@@ -52,7 +52,7 @@ void Sector_3()
 	HAL_GPIO_WritePin(GPIOC, LED_2_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOC, LED_3_Pin, GPIO_PIN_RESET);
 	PUTM_CAN::Lap_timer_Pass Pass_Frame{
-			.Sector = 0x00,
+			.Sector = 0x01,
 		};
 	auto Lap_timer_frame = PUTM_CAN::Can_tx_message<PUTM_CAN::Lap_timer_Pass>(Pass_Frame, PUTM_CAN::can_tx_header_LAP_TIMER_PASS);
 		auto status = Lap_timer_frame.send(hcan1);
