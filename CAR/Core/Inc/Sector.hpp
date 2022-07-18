@@ -15,7 +15,7 @@
 void Sector_1();
 void Sector_2();
 void Sector_3();
-
+void Send_Acc_Time(struct time acc);
 
 
 #endif /* INC_SECTOR_HPP_ */

@@ -26,6 +26,7 @@
 #include "Sector.hpp"
 #include <stdio.h>
 #include <string.h>
+#include <Timer.hpp>
 
 /* USER CODE END Includes */
 
@@ -45,9 +46,13 @@
 
 /* Private variables ---------------------------------------------------------*/
  CAN_HandleTypeDef hcan1;
-
+//Acc timer.
 TIM_HandleTypeDef htim2;
+//Lap timer.
 TIM_HandleTypeDef htim3;
+//DMA timer.
+TIM_HandleTypeDef htim4;
+//IR Detecting channel.
 DMA_HandleTypeDef hdma_tim3_ch3;
 
 /* USER CODE BEGIN PV */
@@ -63,6 +68,7 @@ static void MX_CAN1_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,6 +110,7 @@ int main(void)
   MX_DMA_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
@@ -143,8 +150,6 @@ int main(void)
   HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
   //Device is working.
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
-  //Start blinking timer
-  HAL_TIM_Base_Start_IT(&htim2);
 
   c1.code = CODE_NOT_OK;
   c1.sector = DEFAULT;
@@ -159,22 +164,38 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(c1.code == CODE_OK)
 	  {
-		  	  if(c1.sector == SECTOR_1)
-		  	  {
+		  //Recognize sector, and send it.
+		  switch(c1.sector)
+		  {
+		  	  case SECTOR_1:
+
 		  		  Sector_1();
-		  	  }
-		  	  else if(c1.sector == SECTOR_2)
-		  	  {
+		  		  break;
+
+		  	  case SECTOR_2:
+
 		  		  Sector_2();
-		  	  }
-		  	  else if(c1.sector == SECTOR_3)
-		  	  {
+		  		  break;
+
+		  	  case SECTOR_3:
+
 		  		  Sector_3();
-		  	  }
-		  	  c1.sector = DEFAULT;
-		  	  c1.code = CODE_NOT_OK;
-		  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
+		  		  break;
+
+		  	  case DEFAULT:
+		  		  //Go to default.
+		  		  c1.sector = DEFAULT;
+		  		  c1.code = CODE_NOT_OK;
+		  		  break;
+		  }
+		  //Start measuring acc time or get a result.
+		  time Acc_time = Measure_Acc(c1.Is_Acc_Measured);
+		  //Send result.
+		  Send_Acc_Time(Acc_time);
+		  //Restart Timer DMA.
+	  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
 	  }
+	  //Code not recognized
 	  else if(c1.sector == DEFAULT)
 	  {
 
@@ -341,7 +362,7 @@ static void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -372,6 +393,51 @@ static void MX_TIM3_Init(void)
   /* USER CODE BEGIN TIM3_Init 2 */
 
   /* USER CODE END TIM3_Init 2 */
+
+}
+
+/**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 120-1;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 65535;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
 
 }
 

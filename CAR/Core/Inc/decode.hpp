@@ -19,7 +19,7 @@ typedef enum{
 	SECTOR_1,
 	SECTOR_2,
 	SECTOR_3,
-	DEFAULT
+	DEFAULT,
 }Sector;
 
 
@@ -28,6 +28,7 @@ typedef struct {
 	uint32_t risingedge[2];
 	Valid_Code code;
 	Sector sector;
+	bool Is_Acc_Measured;
 
 }Code;
 
