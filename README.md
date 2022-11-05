@@ -24,9 +24,9 @@ _car_passed = 4_ - Second detection.
   In order to distinguish these signals, STM32l4P5RET6 microcontroller utilize a Input capture mode with TIM3. It measures a time of occurance of two consecutive rising edges, wich are then substracted from each other to calculate signal period.  
   
   ## Pinout
-  1 - GND
-  2 - +24V
-  3 - CAN+
-  4 - CAN-
+  1 - GND  
+  2 - +24V  
+  3 - CAN+  
+  4 - CAN-  
   
  
