@@ -23,10 +23,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "decode.hpp"
-#include "Sector.hpp"
+#include "Run_Recognition.hpp"
 #include <stdio.h>
 #include <string.h>
-#include <Timer.hpp>
 
 /* USER CODE END Includes */
 
@@ -164,42 +163,18 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(c1.code == CODE_OK)
 	  {
-		  //Recognize sector, and send it.
-		  switch(c1.sector)
-		  {
-		  	  case SECTOR_1:
-
-		  		  Sector_1();
-		  		  break;
-
-		  	  case SECTOR_2:
-
-		  		  Sector_2();
-		  		  break;
-
-		  	  case SECTOR_3:
-
-		  		  Sector_3();
-		  		  break;
-
-		  	  case DEFAULT:
-		  		  //Go to default.
-		  		  c1.sector = DEFAULT;
-		  		  c1.code = CODE_NOT_OK;
-		  		  break;
-		  }
-		  //Start measuring acc time or get a result.
-		  time Acc_time = Measure_Acc(c1.Is_Acc_Measured);
-		  //Send result.
-		  Send_Acc_Time(Acc_time);
+		  //Recognize sector.
+		  Recognize_run(c1);
 		  //Restart Timer DMA.
 	  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
 	  }
-	  //Code not recognized
-	  else if(c1.sector == DEFAULT)
+	  else
 	  {
-
+		  HAL_GPIO_TogglePin(GPIOC, LED_6_Pin);
+		  HAL_Delay(200);
 	  }
+	  c1.code = CODE_NOT_OK;
+	  //Code not recognized
 
   }
   /* USER CODE END 3 */

@@ -66,7 +66,11 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
-
+void delay_us(uint16_t us)
+{
+	__HAL_TIM_SET_COUNTER(&htim1,0);  // set the counter value a 0
+	while (__HAL_TIM_GET_COUNTER(&htim1) < us);  // wait for the counter to reach the us input in the parameter
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -119,10 +123,6 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, LED_4_Pin, 0);
   //Turn on IR leds.
   HAL_TIM_Base_Start(&htim1);
-  //Initialize LCD.
-  LiquidCrystal(GPIOC, RS_Pin, GPIO_PIN_6, E_Pin, DB4_Pin, DB5_Pin, DB6_Pin, DB7_Pin);
-  Reset();
-  Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,25 +132,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(car_passed == 1)
-	   	  {
-	   		HAL_TIM_Base_Start_IT(&htim2);
-	   		HAL_GPIO_WritePin(GPIOC, LED_1_Pin, 0);
-	   		car_passed = 2;
-	   	  }
-	   	  else if(car_passed == 4)
-	   	  {
-	   		  Reset();
-	   		  car_passed = 1;
-	   	  }
-	   	  else//Update LCD
-	   	  {
-	   		  if(update_lcd == 1)
-	   		  {
-	   			  update();
-	   			  update_lcd = 0;
-	   		  }
-	   	  }
 
 	  //700
 	  //900

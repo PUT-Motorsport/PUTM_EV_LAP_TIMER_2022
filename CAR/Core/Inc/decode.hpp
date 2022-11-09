@@ -16,9 +16,9 @@ typedef enum{
 }Valid_Code;
 
 typedef enum{
-	SECTOR_1,
-	SECTOR_2,
-	SECTOR_3,
+	START_FINISH,
+	SECTOR_2_SKIDPAD,
+	SECTOR_3_ACC,
 	DEFAULT,
 }Sector;
 
@@ -28,8 +28,8 @@ typedef struct {
 	uint32_t risingedge[2];
 	Valid_Code code;
 	Sector sector;
-	bool Is_Acc_Measured;
-
+	Sector last_sector;
+	bool is_time_being_measured = false;
 }Code;
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim);
