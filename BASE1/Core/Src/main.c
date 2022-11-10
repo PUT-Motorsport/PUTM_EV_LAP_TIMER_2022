@@ -133,14 +133,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  //700
-	  //900
-	  //1100
+	  //1000
+	  //2000
+	  //3000
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	  delay_us(700);
+	  delay_us(1000);
 	  HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
-	  delay_us(700);
-	  HAL_GPIO_TogglePin(GPIOC, LED_3_Pin);
+	  delay_us(1000);
 
   }
   /* USER CODE END 3 */

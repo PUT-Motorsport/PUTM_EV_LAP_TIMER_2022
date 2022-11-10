@@ -146,7 +146,7 @@ int main(void)
   //LED_6_Pin - Blinking = Waiting for pass
 
   //Start IR detecting
-  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
+  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 4);
   //Device is working.
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin, GPIO_PIN_RESET);
 
@@ -166,14 +166,13 @@ int main(void)
 		  //Recognize sector.
 		  Recognize_run(c1);
 		  //Restart Timer DMA.
-	  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 2);
+	  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 4);
+	  	  c1.code = CODE_NOT_OK;
 	  }
 	  else
 	  {
 		  HAL_GPIO_TogglePin(GPIOC, LED_6_Pin);
-		  HAL_Delay(200);
 	  }
-	  c1.code = CODE_NOT_OK;
 	  //Code not recognized
 
   }
