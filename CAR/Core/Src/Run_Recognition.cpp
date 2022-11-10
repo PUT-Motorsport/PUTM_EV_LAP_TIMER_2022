@@ -31,7 +31,9 @@ void Recognize_run(Code c1)
 			{
 				//Send lap time.
 				Send_lap_time(HAL_GetTick() - time_in_milis);
+				float in_minutes = (HAL_GetTick() - time_in_milis)/1000;
 				time_in_milis = HAL_GetTick();
+
 
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)

@@ -7,7 +7,12 @@
 namespace PUTM_CAN {
 
 enum struct Lap_timer_states: uint8_t {
-	Power_up,
+	Normal_operation,
+	Startfinish_battery_low,
+	Sector_2_battery_low,
+	Sector_3_battery_low,
+	Missed_detection,
+	Timeout,
 	Error,
 };
 

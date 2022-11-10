@@ -10,15 +10,20 @@
 
 extern Code c1;
 
-uint32_t diff;
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim3)
 {
-
-	uint64_t diff1 = c1.risingedge[1] - c1.risingedge[0];
-	uint64_t diff2 = c1.risingedge[3] - c1.risingedge[2];
-	diff = (diff1 + diff2)/(uint32_t)2;
-
+	uint32_t diff = 0;
+	int div = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		uint32_t diff_tmp = c1.risingedge[i + 1] - c1.risingedge[i];
+	    if(diff_tmp < 10000)
+	    {
+	        diff += diff_tmp;
+	        div++;
+	    }
+	 }
+	 diff = diff/div;
 
 	//Recognize a sector
 	if( (diff > 1800) && (diff < 2200))
@@ -49,6 +54,5 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim3)
 		c1.sector = DEFAULT;
 		c1.code = CODE_NOT_OK;
 	}
-	diff = 0;
 }
 
