@@ -12,9 +12,8 @@
 
 void Send_lap_time(uint32_t time);
 
-void Send_sector1_time(uint32_t time);
-void Send_sector2_time(uint32_t time);
-void Send_sector3_time(uint32_t time);
+void Send_sector_time(uint32_t time, uint8_t sector);
+
 
 void Send_acc_time(uint32_t time);
 void Send_skidpad_time(uint32_t time);

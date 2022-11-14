@@ -5,7 +5,6 @@
  *      Author: adam
  */
 #include "Run_Recognition.hpp"
-#include "can_interface.hpp"
 #include "Send_times.hpp"
 
 extern CAN_HandleTypeDef hcan1;
@@ -33,8 +32,6 @@ void Recognize_run(Code c1)
 				Send_lap_time(HAL_GetTick() - time_in_milis);
 				float in_minutes = (HAL_GetTick() - time_in_milis)/1000;
 				time_in_milis = HAL_GetTick();
-
-
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)
 			{
@@ -45,7 +42,7 @@ void Recognize_run(Code c1)
 				}
 				//Send sector 3 time and lap time.
 				uint32_t s3 = HAL_GetTick() - time_in_milis;
-				Send_sector3_time(s3);
+				Send_sector_time(s3, 3);
 				Send_lap_time(lap_time + s3);
 				lap_time = 0;
 			}
@@ -57,7 +54,7 @@ void Recognize_run(Code c1)
 				if(c1.last_sector == START_FINISH)
 				{
 					uint32_t s1 = HAL_GetTick() - time_in_milis;
-					Send_sector1_time(s1);
+					Send_sector_time(s1, 1);
 					lap_time += s1;
 				}
 				else if(c1.last_sector == DEFAULT)
@@ -69,7 +66,6 @@ void Recognize_run(Code c1)
 					Send_skidpad_time(HAL_GetTick() - time_in_milis);
 					c1.last_sector = DEFAULT;
 				}
-
 			}
 			break;
 
@@ -79,7 +75,7 @@ void Recognize_run(Code c1)
 			{
 				//Send sector 2 time.
 				uint32_t s2 = HAL_GetTick() - time_in_milis;
-				Send_sector2_time(s2);
+				Send_sector_time(s2, 2);
 				lap_time += s2;
 			}
 			else if(c1.last_sector == START_FINISH)
