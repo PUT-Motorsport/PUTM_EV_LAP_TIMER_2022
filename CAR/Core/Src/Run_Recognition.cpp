@@ -6,6 +6,7 @@
  */
 #include "Run_Recognition.hpp"
 #include "Send_times.hpp"
+#include <limits>
 
 extern CAN_HandleTypeDef hcan1;
 
@@ -13,6 +14,7 @@ uint32_t time_in_milis;
 uint32_t lap_time;
 
 constexpr uint32_t discard_threshold = discard_minutes*1000;
+constexpr uint32_t uint32max = std::numeric_limits<uint32_t>::max();
 
 
 void Recognize_run(Code c1)
@@ -29,8 +31,7 @@ void Recognize_run(Code c1)
 			else if(c1.last_sector == START_FINISH)
 			{
 				//Send lap time.
-				Send_lap_time(HAL_GetTick() - time_in_milis);
-				float in_minutes = (HAL_GetTick() - time_in_milis)/1000;
+				Send_lap_time((HAL_GetTick() - time_in_milis)%uint32max);
 				time_in_milis = HAL_GetTick();
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)
@@ -41,7 +42,7 @@ void Recognize_run(Code c1)
 					time_in_milis = HAL_GetTick();
 				}
 				//Send sector 3 time and lap time.
-				uint32_t s3 = HAL_GetTick() - time_in_milis;
+				uint32_t s3 = (HAL_GetTick() - time_in_milis)%uint32max;
 				Send_sector_time(s3, 3);
 				Send_lap_time(lap_time + s3);
 				lap_time = 0;
@@ -53,7 +54,7 @@ void Recognize_run(Code c1)
 			{
 				if(c1.last_sector == START_FINISH)
 				{
-					uint32_t s1 = HAL_GetTick() - time_in_milis;
+					uint32_t s1 = (HAL_GetTick() - time_in_milis)%uint32max;
 					Send_sector_time(s1, 1);
 					lap_time += s1;
 				}
@@ -63,7 +64,7 @@ void Recognize_run(Code c1)
 				}
 				else if(c1.last_sector == SECTOR_2_SKIDPAD)
 				{
-					Send_skidpad_time(HAL_GetTick() - time_in_milis);
+					Send_skidpad_time((HAL_GetTick() - time_in_milis)%uint32max);
 					c1.last_sector = DEFAULT;
 				}
 			}
@@ -74,21 +75,21 @@ void Recognize_run(Code c1)
 			if(c1.last_sector == SECTOR_2_SKIDPAD)
 			{
 				//Send sector 2 time.
-				uint32_t s2 = HAL_GetTick() - time_in_milis;
+				uint32_t s2 = (HAL_GetTick() - time_in_milis)%uint32max;
 				Send_sector_time(s2, 2);
 				lap_time += s2;
 			}
 			else if(c1.last_sector == START_FINISH)
 			{
 				//Send Acc time.
-				Send_acc_time(HAL_GetTick() - time_in_milis);
+				Send_acc_time((HAL_GetTick() - time_in_milis)%uint32max);
 				c1.last_sector = DEFAULT;
 
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)
 			{
 				//Send skidpad time
-				Send_skidpad_time(HAL_GetTick() - time_in_milis);
+				Send_skidpad_time((HAL_GetTick() - time_in_milis)%uint32max);
 			}
 			break;
 	}
