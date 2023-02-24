@@ -7,8 +7,11 @@
 
 #include "decode.hpp"
 #include <stdlib.h>
+#include <limits>
 
 extern Code c1;
+
+constexpr uint32_t uint32max = std::numeric_limits<uint32_t>::max();
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim3)
 {
@@ -16,7 +19,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim3)
 	int div = 0;
 	for (int i = 0; i < 3; i++)
 	{
-		uint32_t diff_tmp = c1.risingedge[i + 1] - c1.risingedge[i];
+		uint32_t diff_tmp = (c1.risingedge[i + 1] - c1.risingedge[i])%uint32max;
 	    if(diff_tmp < 10000)
 	    {
 	        diff += diff_tmp;

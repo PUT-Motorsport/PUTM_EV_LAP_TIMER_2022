@@ -8,16 +8,25 @@
 #include "Send_times.hpp"
 #include <limits>
 
-extern CAN_HandleTypeDef hcan1;
-
 uint32_t time_in_milis;
 uint32_t lap_time;
 
-constexpr uint32_t discard_threshold = discard_minutes*1000;
+constexpr uint32_t lap_max_discard_threshold = 15*1000;
+constexpr uint32_t lap_min_discard_threshold = 5*1000;
+
+constexpr uint32_t acc_max_discard_threshold = 10*1000;
+constexpr uint32_t acc_min_discard_threshold = 1*1000;
+
+constexpr uint32_t skid_max_discard_threshold = 60*1000;
+constexpr uint32_t skid_min_discard_threshold = 20*1000;
+
 constexpr uint32_t uint32max = std::numeric_limits<uint32_t>::max();
 
+extern Code c1;
 
-void Recognize_run(Code c1)
+void reset();
+
+void Recognize_run()
 {
 	switch(c1.sector)
 	{
@@ -27,25 +36,41 @@ void Recognize_run(Code c1)
 			{
 				//Start timer.
 				time_in_milis = HAL_GetTick();
+				HAL_Delay(1000);
 			}
 			else if(c1.last_sector == START_FINISH)
 			{
 				//Send lap time.
-				Send_lap_time((HAL_GetTick() - time_in_milis)%uint32max);
-				time_in_milis = HAL_GetTick();
+				uint32_t time = (((HAL_GetTick() - time_in_milis)%uint32max));
+				if((time < lap_max_discard_threshold) && (time > lap_min_discard_threshold))
+				{
+					Send_lap_time(time);
+					time_in_milis = HAL_GetTick();
+					HAL_Delay(1000);
+				}
+				else
+				{
+					reset();
+				}
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)
 			{
+				/*
 				if((HAL_GetTick() - time_in_milis) > discard_threshold)
 				{
 					lap_time = 0;
 					time_in_milis = HAL_GetTick();
 				}
+				*/
 				//Send sector 3 time and lap time.
 				uint32_t s3 = (HAL_GetTick() - time_in_milis)%uint32max;
 				Send_sector_time(s3, 3);
 				Send_lap_time(lap_time + s3);
 				lap_time = 0;
+			}
+			else
+			{
+				//reset bo error.
 			}
 			break;
 
@@ -82,9 +107,17 @@ void Recognize_run(Code c1)
 			else if(c1.last_sector == START_FINISH)
 			{
 				//Send Acc time.
-				Send_acc_time((HAL_GetTick() - time_in_milis)%uint32max);
-				c1.last_sector = DEFAULT;
-
+				uint32_t time = (((HAL_GetTick() - time_in_milis)%uint32max));
+				if((time < acc_max_discard_threshold) && (time > acc_min_discard_threshold))
+				{
+					Send_lap_time(time);
+					reset();
+					HAL_Delay(1000);
+				}
+				else
+				{
+					reset();
+				}
 			}
 			else if(c1.last_sector == SECTOR_3_ACC)
 			{
@@ -93,4 +126,10 @@ void Recognize_run(Code c1)
 			}
 			break;
 	}
+}
+void reset()
+{
+	time_in_milis = 0;
+	c1.last_sector = DEFAULT;
+	c1.sector = DEFAULT;
 }

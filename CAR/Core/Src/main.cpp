@@ -164,7 +164,7 @@ int main(void)
 	  if(c1.code == CODE_OK)
 	  {
 		  //Recognize sector.
-		  Recognize_run(c1);
+		  Recognize_run();
 		  //Restart Timer DMA.
 	  	  HAL_TIM_IC_Start_DMA(&htim3, TIM_CHANNEL_3, c1.risingedge, 4);
 	  	  c1.code = CODE_NOT_OK;
