@@ -25,7 +25,7 @@ typedef enum{
 
 typedef struct {
 
-	uint32_t risingedge[4];
+	uint32_t risingedge[NUM_OF_SAMPLES];
 	Valid_Code code;
 	Sector sector;
 	Sector last_sector;

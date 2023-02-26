@@ -84,6 +84,7 @@ void Error_Handler(void);
 #define PD2_GPIO_Port GPIOD
 #define PB5_Pin GPIO_PIN_5
 #define PB5_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

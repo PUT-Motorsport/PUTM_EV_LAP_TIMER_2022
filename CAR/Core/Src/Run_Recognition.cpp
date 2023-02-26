@@ -6,6 +6,7 @@
  */
 #include "Run_Recognition.hpp"
 #include "Send_times.hpp"
+#include "LED.hpp"
 #include <limits>
 
 uint32_t time_in_milis;
@@ -32,11 +33,12 @@ void Recognize_run()
 	{
 		case START_FINISH:
 
+			Set_Start_Finish();
+
 			if(c1.last_sector == DEFAULT)
 			{
 				//Start timer.
 				time_in_milis = HAL_GetTick();
-				HAL_Delay(1000);
 			}
 			else if(c1.last_sector == START_FINISH)
 			{
@@ -46,7 +48,6 @@ void Recognize_run()
 				{
 					Send_lap_time(time);
 					time_in_milis = HAL_GetTick();
-					HAL_Delay(1000);
 				}
 				else
 				{
@@ -72,10 +73,13 @@ void Recognize_run()
 			{
 				//reset bo error.
 			}
+			HAL_Delay(1000);
+			Reset_Detecion();
 			break;
 
 		case SECTOR_2_SKIDPAD:
 			//send sector 1 time.
+			Set_Sector2_Skidpad();
 			{
 				if(c1.last_sector == START_FINISH)
 				{
@@ -93,10 +97,13 @@ void Recognize_run()
 					c1.last_sector = DEFAULT;
 				}
 			}
+			HAL_Delay(1000);
+			Reset_Detecion();
 			break;
 
 		case SECTOR_3_ACC:
 			//Send sector 2 time OR acc time.
+			Set_Sector3_ACC();
 			if(c1.last_sector == SECTOR_2_SKIDPAD)
 			{
 				//Send sector 2 time.
@@ -124,6 +131,8 @@ void Recognize_run()
 				//Send skidpad time
 				Send_skidpad_time((HAL_GetTick() - time_in_milis)%uint32max);
 			}
+			HAL_Delay(1000);
+			Reset_Detecion();
 			break;
 	}
 }

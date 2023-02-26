@@ -42,7 +42,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+#define NUM_OF_SAMPLES 10
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -70,6 +70,7 @@ void Error_Handler(void);
 #define LED_5_GPIO_Port GPIOC
 #define LED_6_Pin GPIO_PIN_5
 #define LED_6_GPIO_Port GPIOC
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
