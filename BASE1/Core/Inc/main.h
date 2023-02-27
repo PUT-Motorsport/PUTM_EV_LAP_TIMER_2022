@@ -80,8 +80,6 @@ void Error_Handler(void);
 #define E_GPIO_Port GPIOC
 #define RS_Pin GPIO_PIN_12
 #define RS_GPIO_Port GPIOC
-#define PD2_Pin GPIO_PIN_2
-#define PD2_GPIO_Port GPIOD
 #define PB5_Pin GPIO_PIN_5
 #define PB5_GPIO_Port GPIOB
 
