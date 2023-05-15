@@ -47,3 +47,11 @@ void Send_skidpad_time(uint32_t time)
 	auto time_skidpad = Can_tx_message<Lap_timer_Skidpad_time>(skidpad_time, can_tx_header_LAP_TIMER_SKIDPAD_TIME);
 	time_skidpad.send(hcan1);
 }
+void SendMain(uint8_t _state)
+{
+	PUTM_CAN::Lap_timer_Main main{
+		.device_state = Lap_timer_states(_state)
+	};
+	auto mainFrame = Can_tx_message<Lap_timer_Main>(main, can_tx_header_LAP_TIMER_MAIN);
+	mainFrame.send(hcan1);
+}
