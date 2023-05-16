@@ -65,6 +65,7 @@ static void MX_CAN1_Init(void);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	++detecion_flag;
+	HAL_NVIC_DisableIRQ(EXTI0_IRQn);
 }
 /* USER CODE END 0 */
 
@@ -132,14 +133,28 @@ int main(void)
 		  SendMain(1);
 		  HAL_Delay(3000);
 		  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
+		  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+		  detecion_flag++;
+
 	  }
 	  else if(detecion_flag == 2)
+	  {
+		 //idle
+	  }
+	  else if(detecion_flag == 3)
 	  {
 		  finishTime = HAL_GetTick();
 		  uint32_t measuredTime = finishTime - startTime;
 		  SendMain(2);
 		  Send_acc_time(measuredTime);
+
 		  SendMain(0);
+		  startTime = 0;
+		  finishTime = 0;
+
+		  HAL_Delay(3000);
+		  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
+		  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 		  detecion_flag = 0;
 	  }
   }
