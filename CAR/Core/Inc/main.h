@@ -70,6 +70,9 @@ void Error_Handler(void);
 #define LED_5_GPIO_Port GPIOC
 #define LED_6_Pin GPIO_PIN_5
 #define LED_6_GPIO_Port GPIOC
+#define IR_Pin GPIO_PIN_0
+#define IR_GPIO_Port GPIOB
+#define IR_EXTI_IRQn EXTI0_IRQn
 
 /* USER CODE BEGIN Private defines */
 

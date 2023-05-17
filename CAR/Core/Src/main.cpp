@@ -113,9 +113,12 @@ int main(void)
   //Device is working.
   Set_Working();
   SendMain(0);
-  /* USER CODE END 2 */
+
   uint32_t startTime;
   uint32_t finishTime;
+  bool isMeasurementActive;
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -123,39 +126,31 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(detecion_flag == 0)
+	  GPIO_PinState irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
+	  if(irState == GPIO_PIN_SET)
 	  {
-		  //Idle
-	  }
-	  else if(detecion_flag == 1)
-	  {
-		  startTime = HAL_GetTick();
 		  SendMain(1);
-		  HAL_Delay(3000);
-		  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
-		  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-		  detecion_flag++;
-
-	  }
-	  else if(detecion_flag == 2)
-	  {
-		 //idle
-	  }
-	  else if(detecion_flag == 3)
-	  {
+		  while(irState == GPIO_PIN_SET)
+		  {
+			  /*wait here until car departures start gate*/
+			  irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
+		  }
+		  //car started a run
+		  startTime = HAL_GetTick();
+		  while(irState == GPIO_PIN_RESET)
+		  {
+			  /*car is in motion, check if it crossed second gate*/
+			  irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
+		  }
+		  //car crossed second gate. Measure time and send it.
 		  finishTime = HAL_GetTick();
-		  uint32_t measuredTime = finishTime - startTime;
-		  SendMain(2);
-		  Send_acc_time(measuredTime);
-
+		  Send_acc_time(finishTime - startTime);
+	  }
+	  else
+	  {
+		  //Not detecting start
 		  SendMain(0);
-		  startTime = 0;
-		  finishTime = 0;
-
-		  HAL_Delay(3000);
-		  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
-		  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-		  detecion_flag = 0;
+		  HAL_Delay(100);
 	  }
   }
   /* USER CODE END 3 */
@@ -276,11 +271,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pin : IR_Pin */
+  GPIO_InitStruct.Pin = IR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(IR_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
