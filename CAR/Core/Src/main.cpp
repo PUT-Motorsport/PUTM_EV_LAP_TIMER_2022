@@ -127,24 +127,21 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  GPIO_PinState irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
-	  if(irState == GPIO_PIN_SET)
+	  if(irState == GPIO_PIN_RESET)
 	  {
 		  SendMain(1);
-		  while(irState == GPIO_PIN_SET)
-		  {
-			  /*wait here until car departures start gate*/
-			  irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
-		  }
 		  //car started a run
 		  startTime = HAL_GetTick();
-		  while(irState == GPIO_PIN_RESET)
-		  {
-			  /*car is in motion, check if it crossed second gate*/
-			  irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
-		  }
+		  HAL_Delay(3000);
+		  irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin);
+		  while(irState != GPIO_PIN_RESET){ irState = HAL_GPIO_ReadPin(GPIOB, IR_Pin); }
 		  //car crossed second gate. Measure time and send it.
 		  finishTime = HAL_GetTick();
+		  uint32_t res = finishTime - startTime;
 		  Send_acc_time(finishTime - startTime);
+		  finishTime = 0;
+		  startTime = 0;
+		  HAL_Delay(3000);
 	  }
 	  else
 	  {
